@@ -11,7 +11,7 @@ public class  Player{
         return name;
     }
 
-    public Deck getPlayerDeck(){
+    public Deck getDeck(){
         return playDeck;
     }
 }

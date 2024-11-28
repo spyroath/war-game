@@ -1,19 +1,24 @@
 public class Joker extends Card{
-    
 
-    public Joker(){
-        super(0, 5);
+    //constructor
+    public Joker(int value){
+        super(5, value);
     }
 
-    public String getSuitAString(){
+    //methods
+    public String getSuitAsString(){
         return "Joker";
     }
 
     public String getValueAsString(){
-        return "Joker";
+        return "\"" + value + "\"";
     }
 
-    public String toString() {
-        return "Joker";
-    }
+    //main for testing
+    // public static void main(String[] args) {
+        
+    //     Joker myJoker = new Joker(3, 1);
+
+    //     System.out.println(myJoker.toString());
+    // }
 }
