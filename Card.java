@@ -1,3 +1,7 @@
+/*
+ * Author: Steve Banh
+ */
+
 // import java.util.Scanner;
 public class Card {
 

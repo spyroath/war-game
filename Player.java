@@ -1,3 +1,7 @@
+/*
+ * Author: Antonio Praia Isabel
+ */
+
 public class  Player{
     private String name;
     private Deck playDeck;

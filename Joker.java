@@ -1,3 +1,6 @@
+/*
+ * Author: Steve Banh
+ */
 public class Joker extends Card{
 
     //constructor

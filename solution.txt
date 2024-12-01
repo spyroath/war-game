@@ -1,0 +1,301 @@
+/*
+ * Author: Steve Banh
+ */
+
+// import java.util.Scanner;
+public class Card {
+
+    /*this class is responsible of declaring the suits
+    and the value of the cards*/
+    protected int suit;
+    protected int value;
+
+    //Constructor
+    public Card(int suit, int value){
+        this.suit = suit;
+        this.value = value;
+    }
+
+    //getters
+    public int getSuit(){
+        return suit;
+    }
+
+    public int getValue(){
+        return value;
+    }
+
+    //methods
+    public String getSuitAsString(){
+
+        switch (suit){
+            case 1:
+                return "Spades";
+            case 2:
+                return "Hearts";
+            case 3:
+                return "Diamonds";
+            case 4:
+                return "Clubs";
+            default:
+                return "Invalid suit";
+        }
+    }
+
+    public String getValueAsString(){
+
+        switch (value){
+            case 1:
+                return "Ace";
+            case 2,3,4,5,6,7,8,9,10:
+                return Integer.toString(value);
+            case 11:
+                return "Jack";
+            case 12:
+                return "Queen";
+            case 13:
+                return "King";
+            default:
+                return "Invalid value";
+        }
+    }
+
+    public String toString(){
+        return getValueAsString() + " of " + getSuitAsString();
+    }
+
+    // //main for testing
+    // public static void main(String[] args) {
+    //     Scanner input = new Scanner(System.in);
+
+    //     System.out.println("enter a suit");
+    //     int suit = input.nextInt();
+
+    //     System.out.println("enter a value");
+    //     int value = input.nextInt();
+
+    //     Card myCard = new Card (suit, value);
+
+    //     System.out.println(myCard.toString());
+
+    //     System.out.println(myCard.getSuitAsString(4));
+    //     System.out.println(myCard.getValueAsString(5));
+
+    // }
+}
+
+/*
+ * Author: Spyro Athanasoulis
+ * Section n*: 000002
+ */
+public class Deck {
+    private Card[] deck;
+    private int numCards;
+
+    public Deck() {
+        deck = new Card[54];
+        numCards = 54;
+        int currentIndex = 0;
+
+        for (int i = 1; i < 5; i++) { // suits
+            for (int j = 1; j < 14; j++) { // values
+                deck[currentIndex] = new Card(i, j);
+                currentIndex++;
+            }
+        }
+
+        // last 2 cards are jokers
+        deck[52] = new Joker(14);
+        deck[53] = new Joker(14);
+    }
+
+    public Deck(int deckSize) {
+        deck = new Card[deckSize];
+        numCards = 0;
+    }
+
+    public void shuffle() {
+        for (int i = numCards - 1; i > 0; i--) {
+            int rand = (int)(Math.random() * (i + 1));
+            Card temp = deck[i];
+            deck[i] = deck[rand];
+            deck[rand] = temp;
+        }
+    }
+
+    public void removeCard(int index) {
+        deck[index] = null;
+    }
+
+    public Card dealCard(int index) {
+        return deck[index];
+    }
+
+    public Card dealCard() {
+        if (numCards > 0) {
+            return deck[--numCards];
+        }
+        else {
+            System.out.println("Empty deck");
+            return null;      
+        }
+    }
+
+    public void printDeck() {
+        if (numCards == 0) {
+            System.out.println("Empty deck");
+            return;
+        }
+        
+        for (Card card : deck)
+            System.out.println(card);
+    }
+
+    public void addToDeck(Card card) {
+        if (numCards >= 0 && numCards < 54)
+            deck[numCards++] = card;
+    }
+
+    public int getNumberOfCards() {
+        return numCards;
+    }
+}
+
+/*
+ * Author: Steve Banh
+ */
+public class Joker extends Card{
+
+    //constructor
+    public Joker(int value){
+        super(5, value);
+    }
+
+    //methods
+    public String getSuitAsString(){
+        return "Joker";
+    }
+
+    public String getValueAsString(){
+        return "\"" + value + "\"";
+    }
+
+    //main for testing
+    // public static void main(String[] args) {
+        
+    //     Joker myJoker = new Joker(3, 1);
+
+    //     System.out.println(myJoker.toString());
+    // }
+}
+
+/*
+ * Author: Antonio Praia Isabel
+ */
+
+public class  Player{
+    private String name;
+    private Deck playDeck;
+
+    public Player(String name){
+        this.name = name;
+        this.playDeck = new Deck(54);
+    }
+    
+    public String getName(){
+        return name;
+    }
+
+    public Deck getDeck(){
+        return playDeck;
+    }
+}
+
+/*
+* Author(s): Spyro Athanasoulis
+* Section n*: 000002
+*/
+
+import java.util.Scanner;
+
+public class WarGame {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Enter name for player 1: ");
+        Player player1 = new Player(scan.nextLine());
+        System.out.print("Enter name for player 2: ");
+        Player player2 = new Player(scan.nextLine());
+
+        Deck deck = new Deck();
+        for (int i = 0; i < 5; i++) {
+            deck.shuffle();
+        }
+
+        for (int i = 0; i < 27; i++) {
+            player1.getDeck().addToDeck(deck.dealCard());
+            player2.getDeck().addToDeck(deck.dealCard());
+        }
+
+        System.out.println();
+
+        Card player1Card, player2Card;
+        Deck table = new Deck(54);
+
+        System.out.println("Press enter to draw cards");
+        do {
+            scan.nextLine();
+            player1Card = player1.getDeck().dealCard();
+            if (player1Card == null) {
+                System.out.println(player1.getName() + " has no more cards");
+                break;
+            }
+            System.out.print(player1.getName() + " draws " + player1Card + " (" + player1.getDeck().getNumberOfCards() + " cards remaining in deck)");
+            scan.nextLine();
+            player2Card = player2.getDeck().dealCard();
+            if (player2Card == null) {
+                System.out.println(player2.getName() + " has no more cards");
+                break;
+            }
+            System.out.print(player2.getName() + " draws " + player2Card + " (" + player2.getDeck().getNumberOfCards() + " cards remaining in deck)");
+
+            if (player1Card.getValue() == player2Card.getValue()) {
+                System.out.print("\nBoth players draw the same card, adding to table");
+                table.addToDeck(player1Card);
+                table.addToDeck(player2Card);
+                continue;
+            }
+
+            if (player1Card.getValue() > player2Card.getValue()) {
+                player1.getDeck().addToDeck(player1Card);
+                player1.getDeck().addToDeck(player2Card);
+                transferTableCards(player1.getDeck(), table);
+                player1.getDeck().shuffle();
+                System.out.print("\n" + player1.getName() + " wins this round");
+            } else {
+                player2.getDeck().addToDeck(player1Card);
+                player2.getDeck().addToDeck(player2Card);
+                transferTableCards(player2.getDeck(), table);
+                player2.getDeck().shuffle();
+                System.out.print("\n" + player2.getName() + " wins this round");
+            }
+
+        } while (player1.getDeck().getNumberOfCards() > 0 && player2.getDeck().getNumberOfCards() > 0);
+
+        scan.close();
+
+        if (player1.getDeck().getNumberOfCards() > 0) {
+            System.out.println("\n" + player1.getName() + " wins the game");
+        } else {
+            System.out.println("\n" + player2.getName() + " wins the game");
+        }
+    }
+
+    public static void transferTableCards(Deck winnerDeck, Deck table) {
+        while (table.getNumberOfCards() > 0) { // clear entire table
+            Card card = table.dealCard();
+            if (card != null) {
+                winnerDeck.addToDeck(card);
+            }
+        }
+    }
+}
